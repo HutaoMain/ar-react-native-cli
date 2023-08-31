@@ -2,7 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 
 import BottomTabNavigation from './BottomTabNavigation';
-import AuthStackNavigation from './AuthStackNavigation.js';
+import AuthStackNavigation from './AuthStackNavigation';
 import useAuthStore from '../zustand/AuthStore';
 
 const RootNavigation = () => {

@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import GenderSelect from "../components/GenderSelect";
-import SliderInput from "../components/SliderInput";
-import CounterInput from "../components/CounterInput";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
-import Navbar from "../components/Navbar";
+import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import GenderSelect from '../components/GenderSelect';
+import SliderInput from '../components/SliderInput';
+import CounterInput from '../components/CounterInput';
+import {useNavigation} from '@react-navigation/native';
+import Navbar from '../components/Navbar';
 
 const BMICalculator = () => {
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState('');
   const [height, setHeight] = useState(160);
   const [weight, setWeight] = useState(60);
   const [age, setAge] = useState(25);
@@ -26,18 +25,18 @@ const BMICalculator = () => {
   console.log(bmiResult);
 
   const handleSubmitBmiResult = () => {
-    let bmiCategory = "";
+    let bmiCategory = '';
     if (bmiResult < 18.5) {
-      bmiCategory = "Underweight";
+      bmiCategory = 'Underweight';
     } else if (bmiResult >= 18.5 && bmiResult < 24.9) {
-      bmiCategory = "Normal";
+      bmiCategory = 'Normal';
     } else if (bmiResult >= 25 && bmiResult < 29.9) {
-      bmiCategory = "Overweight";
+      bmiCategory = 'Overweight';
     } else {
-      bmiCategory = "Obese";
+      bmiCategory = 'Obese';
     }
 
-    navigate.navigate("BMIResult", {
+    navigate.navigate('BMIResult', {
       gender: gender,
       height: height,
       weight: weight,
@@ -52,15 +51,14 @@ const BMICalculator = () => {
       style={{
         flex: 1,
         padding: 20,
-        backgroundColor: "#D5D5D5",
-        width: "100%",
-        height: "100%",
-        alignItems: "center",
-      }}
-    >
+        backgroundColor: '#D5D5D5',
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+      }}>
       <Navbar />
       <GenderSelect
-        onSelectGender={(selectedGender) => setGender(selectedGender)}
+        onSelectGender={selectedGender => setGender(selectedGender)}
       />
       <SliderInput
         label="Height (cm)"
@@ -68,49 +66,46 @@ const BMICalculator = () => {
         min={100}
         max={250}
         step={1}
-        onValueChange={(value) => setHeight(value)}
+        onValueChange={value => setHeight(value)}
       />
       <View
         style={{
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-around",
-        }}
-      >
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+        }}>
         <CounterInput
           label="Weight (kg)"
           value={weight}
-          onIncrement={() => setWeight((prevWeight) => prevWeight + 1)}
-          onDecrement={() => setWeight((prevWeight) => prevWeight - 1)}
+          onIncrement={() => setWeight(prevWeight => prevWeight + 1)}
+          onDecrement={() => setWeight(prevWeight => prevWeight - 1)}
         />
         <CounterInput
           label="Age"
           value={age}
-          onIncrement={() => setAge((prevAge) => prevAge + 1)}
-          onDecrement={() => setAge((prevAge) => prevAge - 1)}
+          onIncrement={() => setAge(prevAge => prevAge + 1)}
+          onDecrement={() => setAge(prevAge => prevAge - 1)}
         />
       </View>
       <TouchableOpacity
         style={{
-          backgroundColor: "white",
+          backgroundColor: 'white',
           paddingVertical: 10,
           paddingHorizontal: 20,
           borderRadius: 5,
           marginTop: 20,
-          width: "95%",
+          width: '95%',
           borderWidth: 1,
-          borderColor: "black",
+          borderColor: 'black',
         }}
-        onPress={handleSubmitBmiResult}
-      >
+        onPress={handleSubmitBmiResult}>
         <Text
           style={{
-            color: "black",
-            fontWeight: "bold",
+            color: 'black',
+            fontWeight: 'bold',
             fontSize: 18,
-            textAlign: "center",
-          }}
-        >
+            textAlign: 'center',
+          }}>
           Calculate BMI
         </Text>
       </TouchableOpacity>

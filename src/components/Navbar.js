@@ -18,7 +18,7 @@ const Navbar = () => {
         <Text style={{fontSize: 18, fontWeight: 'bold'}}>Gabbi Garcia</Text>
       </View>
       <Image
-        source={require('../assets/images.jpg')}
+        source={require('../../assets/images.jpg')}
         style={{width: 50, height: 50, borderRadius: 100}}
       />
     </View>
