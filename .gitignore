@@ -63,3 +63,5 @@ buck-out/
 # additional from me
 /src/API_URL.js
 /ios
+/yarn.lock
+/assets
