@@ -1,3 +1,4 @@
+import React from 'react';
 import RootNavigation from './src/navigation/RootNavigation';
 import Toast from 'react-native-toast-message';
 import {QueryClient, QueryClientProvider} from 'react-query';

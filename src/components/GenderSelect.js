@@ -2,11 +2,10 @@ import React, {useState} from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
 // import { Ionicons } from "@expo/vector-icons";
 
-
 const GenderSelect = ({onSelectGender}) => {
-  const [selectedGender, setSelectedGender] = useState<string>('');
+  const [selectedGender, setSelectedGender] = useState('');
 
-  const handleGenderSelect = (gender) => {
+  const handleGenderSelect = gender => {
     setSelectedGender(gender);
     onSelectGender(gender);
   };

@@ -1,5 +1,5 @@
+import React from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
-
 
 const CounterInput = ({label, value, onIncrement, onDecrement}) => {
   return (

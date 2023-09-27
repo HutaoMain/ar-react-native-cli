@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   View,
   Text,
@@ -10,8 +11,10 @@ import {useNavigation} from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import Toast from 'react-native-toast-message';
-import axios from 'axios';
-import {API_URL} from '../API_URL';
+// import axios from 'axios';
+// import {API_URL} from '../API_URL';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {FIREBASE_AUTH} from '../FirebaseConfig';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -21,8 +24,9 @@ const Register = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
-  const onChangeSelectedDate = (selectedDate) => {
+  const onChangeSelectedDate = selectedDate => {
     const formattedDate = new Date(selectedDate);
     setShowDatePicker(false);
     if (formattedDate) {
@@ -34,26 +38,43 @@ const Register = () => {
     setShowDatePicker(true);
   };
 
-  const navigation =
-    useNavigation();
+  const navigation = useNavigation();
+
+  // const handleRegistration = async () => {
+  //   setLoading(true);
+  //   try {
+  //     if (password !== confirmPassword) {
+  //       Toast.show({
+  //         type: 'error',
+  //         text1: `Password do not match.`,
+  //       });
+  //       return;
+  //     }
+
+  //     await axios.post(`${API_URL}/api/user/register`, {
+  //       email: email,
+  //       name: name,
+  //       password: password,
+  //       birthday: date,
+  //     });
+  //     Toast.show({
+  //       type: 'success',
+  //       text1: `Successfully registered your account.`,
+  //     });
+  //     setLoading(false);
+  //     setTimeout(() => {
+  //       navigation.navigate('Login');
+  //     }, 2000);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //   }
+  // };
 
   const handleRegistration = async () => {
     setLoading(true);
     try {
-      if (password !== confirmPassword) {
-        Toast.show({
-          type: 'error',
-          text1: `Password do not match.`,
-        });
-        return;
-      }
-
-      await axios.post(`${API_URL}/api/user/register`, {
-        email: email,
-        name: name,
-        password: password,
-        birthday: date,
-      });
+      await createUserWithEmailAndPassword(auth, email, password);
       Toast.show({
         type: 'success',
         text1: `Successfully registered your account.`,
@@ -63,8 +84,9 @@ const Register = () => {
         navigation.navigate('Login');
       }, 2000);
     } catch (error) {
-      setLoading(false);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 

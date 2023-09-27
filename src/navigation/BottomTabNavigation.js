@@ -1,9 +1,9 @@
 // import { Ionicons } from "@expo/vector-icons";
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BMINavigationStack from './BMINavigationStack';
-import Home from '../screens/Home';
+
 import Person from '../screens/Person';
-import ARScreen from '../screens/ARScreen';
 
 const BottomTabNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -42,15 +42,9 @@ const BottomTabNavigation = () => {
         component={BMINavigationStack}
         options={{headerShown: false}}
       />
-      <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />
       <Tab.Screen
         name="Person"
         component={Person}
-        options={{headerShown: false}}
-      />
-      <Tab.Screen
-        name="AR"
-        component={ARScreen}
         options={{headerShown: false}}
       />
     </Tab.Navigator>

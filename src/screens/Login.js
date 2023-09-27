@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   View,
   Text,
@@ -7,38 +8,59 @@ import {
 } from 'react-native';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
+// import axios from 'axios';
 import useAuthStore from '../zustand/AuthStore';
 // import { AntDesign } from "@expo/vector-icons";
-import {API_URL} from '../API_URL';
+// import {API_URL} from '../API_URL';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import {FIREBASE_AUTH} from '../FirebaseConfig';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
   const setUser = useAuthStore(state => state.setUser);
 
   const navigation = useNavigation();
 
+  // const handleLogin = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.post(`${API_URL}/api/user/login`, {
+  //       email: email,
+  //       password: password,
+  //     });
+  //     setLoading(false);
+  //     setUser(email);
+  //     console.log(res.data);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: `Email or password is incorrect.`,
+  //     });
+  //     console.log(error);
+  //   }
+  // };
+
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/api/user/login`, {
-        email: email,
-        password: password,
-      });
-      setLoading(false);
+      await signInWithEmailAndPassword(auth, email, password);
       setUser(email);
-      console.log(res.data);
     } catch (error) {
-      setLoading(false);
+      console.log(error);
       Toast.show({
         type: 'error',
         text1: `Email or password is incorrect.`,
       });
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,7 +73,7 @@ const Login = () => {
       <Text style={styles.title}>FitAR</Text>
       <Text>Login</Text>
       <View style={styles.input_container}>
-        {/* <AntDesign name="user" size={24} color="black" /> */}
+        <Icon name="user" size={24} />
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -60,7 +82,7 @@ const Login = () => {
         />
       </View>
       <View style={styles.input_container}>
-        {/* <AntDesign name="lock" size={24} color="black" /> */}
+        <Icon name="lock" size={24} />
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -113,6 +135,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: 40,
     padding: 10,
+    color: 'black',
   },
   button: {
     width: '90%',
