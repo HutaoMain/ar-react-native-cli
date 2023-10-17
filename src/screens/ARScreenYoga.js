@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import {
   ViroARScene,
@@ -7,12 +7,12 @@ import {
   ViroAnimatedImage,
 } from '@viro-community/react-viro';
 
-const ARScreen = () => {
+const ARScreenYoga = () => {
   return (
     <ViroARScene>
       <ViroAmbientLight color="#ffffff" />
       <ViroAnimatedImage
-        source={require('../../assets/running-no-background.gif')}
+        source={require('../../assets/yoga-no-background.gif')}
         position={[0, 0, -3]}
         scale={[2, 2, 0]}
       />
@@ -25,7 +25,7 @@ export default () => {
     <ViroARSceneNavigator
       autofocus={true}
       initialScene={{
-        scene: ARScreen,
+        scene: ARScreenYoga,
       }}
       style={styles.f1}
     />

@@ -67,3 +67,4 @@ buck-out/
 /__tests__
 /.vscode
 
+/src/FirebaseConfig.js

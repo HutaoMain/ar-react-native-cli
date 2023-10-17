@@ -2,10 +2,12 @@ import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import Wave from '../components/Wave';
 import CountdownComponent from '../components/Countdown';
+import ARScreenPushUp from './ARScreenPushUp';
 
 const PushUp = () => {
   return (
     <View style={styles.container}>
+      <ARScreenPushUp />
       <View style={styles.countdownContainer}>
         <CountdownComponent />
       </View>

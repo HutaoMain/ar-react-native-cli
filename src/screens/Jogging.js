@@ -2,10 +2,12 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import Wave from '../components/Wave';
 import CountdownComponent from '../components/Countdown';
+import ARScreen from './ARScreen';
 
 const Jogging = () => {
   return (
     <View style={styles.container}>
+      <ARScreen />
       <View style={styles.countdownContainer}>
         <CountdownComponent />
       </View>

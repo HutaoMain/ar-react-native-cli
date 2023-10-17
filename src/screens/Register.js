@@ -40,37 +40,6 @@ const Register = () => {
 
   const navigation = useNavigation();
 
-  // const handleRegistration = async () => {
-  //   setLoading(true);
-  //   try {
-  //     if (password !== confirmPassword) {
-  //       Toast.show({
-  //         type: 'error',
-  //         text1: `Password do not match.`,
-  //       });
-  //       return;
-  //     }
-
-  //     await axios.post(`${API_URL}/api/user/register`, {
-  //       email: email,
-  //       name: name,
-  //       password: password,
-  //       birthday: date,
-  //     });
-  //     Toast.show({
-  //       type: 'success',
-  //       text1: `Successfully registered your account.`,
-  //     });
-  //     setLoading(false);
-  //     setTimeout(() => {
-  //       navigation.navigate('Login');
-  //     }, 2000);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.log(error);
-  //   }
-  // };
-
   const handleRegistration = async () => {
     setLoading(true);
     try {
