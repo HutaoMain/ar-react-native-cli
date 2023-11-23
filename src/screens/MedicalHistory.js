@@ -1,30 +1,77 @@
-import React from 'react';
-import {View, Text, TextInput, StyleSheet, ScrollView} from 'react-native';
+import React, {useState} from 'react';
+import {collection, addDoc, serverTimestamp} from 'firebase/firestore';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {FIRESTORE_DB} from '../FirebaseConfig';
+import {Toast} from 'react-native-toast-message/lib/src/Toast';
+import {useNavigation} from '@react-navigation/native';
+import useAuthStore from '../zustand/AuthStore';
 
 const MedicalHistory = () => {
+  const [formData, setFormData] = useState({
+    allergies: '',
+    currentMedications: '',
+    medicalConditions: '',
+  });
+
+  const user = useAuthStore(state => state.user);
+
+  const navigate = useNavigation();
+
+  const saveFormDataToFirebase = async () => {
+    try {
+      await addDoc(collection(FIRESTORE_DB, 'medicalHistory'), {
+        email: user,
+        allergies: formData.allergies,
+        currentMedications: formData.currentMedications,
+        medicalConditions: formData.medicalConditions,
+        createdAt: serverTimestamp(),
+      });
+      console.log('After addDoc');
+      Toast.show({
+        type: 'success',
+        text1: `Successfully Saved Medical History`,
+      });
+      navigate.navigate('Home');
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: `Error adding document`,
+      });
+      console.error('Error adding document: ', error);
+    }
+  };
+
+  const handleAllergiesChange = text => {
+    setFormData(data => ({
+      ...data,
+      allergies: text,
+    }));
+  };
+
+  const handleCurrentMedicationsChange = text => {
+    setFormData(data => ({
+      ...data,
+      currentMedications: text,
+    }));
+  };
+
+  const handleMedicalConditionsChange = text => {
+    setFormData(data => ({
+      ...data,
+      medicalConditions: text,
+    }));
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Medical History Form</Text>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Full Name</Text>
-        <TextInput style={styles.input} placeholder="John Doe" />
-      </View>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Date of Birth</Text>
-        <TextInput style={styles.input} placeholder="MM/DD/YYYY" />
-      </View>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Gender</Text>
-        <TextInput style={styles.input} placeholder="Male" />
-      </View>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Height (cm)</Text>
-        <TextInput style={styles.input} placeholder="175" />
-      </View>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Weight (kg)</Text>
-        <TextInput style={styles.input} placeholder="70" />
-      </View>
       <View style={styles.formGroup}>
         <Text style={styles.label}>Allergies</Text>
         <TextInput
@@ -32,6 +79,9 @@ const MedicalHistory = () => {
           placeholder="List any allergies..."
           multiline
           numberOfLines={4}
+          placeholderTextColor="black"
+          onChangeText={handleAllergiesChange}
+          value={formData.allergies}
         />
       </View>
       <View style={styles.formGroup}>
@@ -41,6 +91,9 @@ const MedicalHistory = () => {
           placeholder="List current medications..."
           multiline
           numberOfLines={4}
+          placeholderTextColor="black"
+          onChangeText={handleCurrentMedicationsChange}
+          value={formData.currentMedications}
         />
       </View>
       <View style={styles.formGroup}>
@@ -50,8 +103,22 @@ const MedicalHistory = () => {
           placeholder="List any medical conditions..."
           multiline
           numberOfLines={4}
+          placeholderTextColor="black"
+          onChangeText={handleMedicalConditionsChange}
+          value={formData.medicalConditions}
         />
       </View>
+      <TouchableOpacity
+        onPress={saveFormDataToFirebase}
+        style={{
+          borderWidth: 1,
+          borderColor: 'black',
+          height: 50,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text>Save</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -59,8 +126,9 @@ const MedicalHistory = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingBottom: 50,
+    paddingHorizontal: 20,
+
+    paddingTop: 20,
     backgroundColor: '#ffffff',
   },
   title: {
@@ -80,6 +148,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
+    color: 'black',
   },
   multilineInput: {
     height: 100,

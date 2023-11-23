@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import GenderSelect from '../components/GenderSelect';
 import SliderInput from '../components/SliderInput';
 import CounterInput from '../components/CounterInput';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
-import Navbar from '../components/Navbar';
+import useFetchCurrentBmiData from '../CurrentBmiResult';
+import LinearGradient from 'react-native-linear-gradient';
 
 const BMICalculator = () => {
   const [gender, setGender] = useState('');
@@ -15,14 +17,26 @@ const BMICalculator = () => {
 
   const navigate = useNavigation();
 
+  const bmiResultData = useFetchCurrentBmiData();
+
+  useEffect(() => {
+    setGender(bmiResultData?.gender || '');
+    setHeight(bmiResultData?.height || 160);
+    setWeight(bmiResultData?.weight || 160);
+    setAge(bmiResultData?.age || 25);
+    setBMIResult(bmiResultData?.bmiResult || 0);
+
+    console.log('sample');
+  }, [bmiResultData]);
+
+  console.log(bmiResultData);
+
   useEffect(() => {
     const heightInMeters = height / 100;
     const bmi = weight / (heightInMeters * heightInMeters);
     const finalBmi = Math.round(bmi * 1e2) / 1e2;
     setBMIResult(finalBmi);
-  }, [bmiResult]);
-
-  console.log(bmiResult);
+  });
 
   const handleSubmitBmiResult = () => {
     let bmiCategory = '';
@@ -46,19 +60,23 @@ const BMICalculator = () => {
     });
   };
 
+  const disabled = gender === '';
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
         padding: 20,
-        backgroundColor: '#D5D5D5',
+        paddingTop: 20,
+        backgroundColor: 'white',
         width: '100%',
         height: '100%',
         alignItems: 'center',
+        justifyContent: 'space-around',
       }}>
-      <Navbar />
       <GenderSelect
         onSelectGender={selectedGender => setGender(selectedGender)}
+        gender={gender}
       />
       <SliderInput
         label="Height (cm)"
@@ -88,29 +106,41 @@ const BMICalculator = () => {
         />
       </View>
       <TouchableOpacity
-        style={{
-          backgroundColor: 'white',
-          paddingVertical: 10,
-          paddingHorizontal: 20,
-          borderRadius: 5,
-          marginTop: 20,
-          width: '95%',
-          borderWidth: 1,
-          borderColor: 'black',
-        }}
-        onPress={handleSubmitBmiResult}>
-        <Text
+        onPress={handleSubmitBmiResult}
+        style={styles.button}
+        disabled={disabled}>
+        <LinearGradient
+          colors={disabled ? ['#d3d3d3', '#d3d3d3'] : ['#FFAA21', '#FFC42C']}
           style={{
-            color: 'black',
-            fontWeight: 'bold',
-            fontSize: 18,
-            textAlign: 'center',
+            flex: 1,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 10,
           }}>
-          Calculate BMI
-        </Text>
+          <Text style={styles.buttonText}>
+            {bmiResultData ? 'Re-calculate BMI' : 'Calculate BMI'}
+          </Text>
+        </LinearGradient>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    width: '90%',
+    height: 60,
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    lineHeight: 40,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 export default BMICalculator;

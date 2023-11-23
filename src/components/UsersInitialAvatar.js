@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 
 const UserInitialsAvatar = ({name}) => {
   const getRandomColor = () => {
-    const colors = ['#FF5733', '#33FF57', '#5733FF', '#33B5FF', '#FF33E9'];
+    const colors = ['#FF5733'];
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };

@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
-// import { Ionicons } from "@expo/vector-icons";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const GenderSelect = ({onSelectGender}) => {
+const GenderSelect = ({onSelectGender, gender}) => {
   const [selectedGender, setSelectedGender] = useState('');
+
+  useEffect(() => {
+    setSelectedGender(gender);
+  }, [gender]);
 
   const handleGenderSelect = gender => {
     setSelectedGender(gender);
@@ -17,7 +21,7 @@ const GenderSelect = ({onSelectGender}) => {
         justifyContent: 'space-around',
         marginBottom: 20,
         width: '100%',
-        height: '20%',
+        height: '25%',
       }}>
       <TouchableOpacity
         style={[
@@ -31,17 +35,17 @@ const GenderSelect = ({onSelectGender}) => {
             alignItems: 'center',
             justifyContent: 'center',
           },
-          selectedGender === 'male' && {backgroundColor: '#E44203'},
+          selectedGender === 'male' && {backgroundColor: '#FD9206'},
         ]}
         onPress={() => handleGenderSelect('male')}>
-        {/* <Ionicons
+        <Ionicons
           name="male"
           size={60}
           style={[
-            { color: "black" },
-            selectedGender === "male" && { color: "white" },
+            {color: 'black'},
+            selectedGender === 'male' && {color: 'white'},
           ]}
-        /> */}
+        />
         <Text
           style={[
             {fontSize: 20, color: 'black'},
@@ -62,17 +66,17 @@ const GenderSelect = ({onSelectGender}) => {
             alignItems: 'center',
             justifyContent: 'center',
           },
-          selectedGender === 'female' && {backgroundColor: '#E44203'},
+          selectedGender === 'female' && {backgroundColor: '#FD9206'},
         ]}
         onPress={() => handleGenderSelect('female')}>
-        {/* <Ionicons
+        <Ionicons
           name="female"
           size={60}
           style={[
-            { color: "black" },
-            selectedGender === "female" && { color: "white" },
+            {color: 'black'},
+            selectedGender === 'female' && {color: 'white'},
           ]}
-        /> */}
+        />
         <Text
           style={[
             {fontSize: 20, color: 'black'},

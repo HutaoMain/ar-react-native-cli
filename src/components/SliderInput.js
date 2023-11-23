@@ -11,7 +11,7 @@ const SliderInput = ({label, value, min, max, step, onValueChange}) => {
         backgroundColor: 'white',
         borderColor: 'black',
         borderRadius: 5,
-        height: '20%',
+        height: '25%',
         width: '95%',
         alignItems: 'center',
         justifyContent: 'center',

@@ -5,17 +5,16 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-// import axios from 'axios';
 import useAuthStore from '../zustand/AuthStore';
-// import { AntDesign } from "@expo/vector-icons";
-// import {API_URL} from '../API_URL';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {FIREBASE_AUTH} from '../FirebaseConfig';
 import Icon from 'react-native-vector-icons/AntDesign';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,26 +25,6 @@ const Login = () => {
   const setUser = useAuthStore(state => state.setUser);
 
   const navigation = useNavigation();
-
-  // const handleLogin = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.post(`${API_URL}/api/user/login`, {
-  //       email: email,
-  //       password: password,
-  //     });
-  //     setLoading(false);
-  //     setUser(email);
-  //     console.log(res.data);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: `Email or password is incorrect.`,
-  //     });
-  //     console.log(error);
-  //   }
-  // };
 
   const handleLogin = async () => {
     setLoading(true);
@@ -69,39 +48,59 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>FitAR</Text>
-      <Text>Login</Text>
-      <View style={styles.input_container}>
-        <Icon name="user" size={24} />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-      </View>
-      <View style={styles.input_container}>
-        <Icon name="lock" size={24} />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>
-          {loading ? 'Logging in..' : 'Login'}
-        </Text>
-      </TouchableOpacity>
-      <Text>or</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleGoToRegisterScreen}>
-        <Text style={styles.buttonText}>No account yet? Click here</Text>
-      </TouchableOpacity>
+    <View style={styles.login}>
+      <ImageBackground
+        source={require('../../assets/background.jpg')}
+        style={styles.backgroundImage}>
+        <View style={styles.container}>
+          <Text style={styles.title}>FitAR</Text>
+          <View style={styles.inputContainer}>
+            <Icon name="user" size={24} />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              placeholderTextColor="black"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Icon name="lock" size={24} />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              placeholderTextColor="black"
+            />
+          </View>
+          <TouchableOpacity onPress={handleLogin} style={styles.button}>
+            <LinearGradient
+              colors={['#FFAA21', '#FFC42C']}
+              style={{
+                flex: 1,
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 10,
+              }}>
+              <Text style={styles.buttonText}>
+                {loading ? 'Please wait..' : 'Login'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          <Text>or</Text>
+          <View style={styles.registerContainer}>
+            <Text>Don't have an account? </Text>
+            <Text
+              style={styles.registerText}
+              onPress={handleGoToRegisterScreen}>
+              Sign Up
+            </Text>
+          </View>
+        </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -109,18 +108,25 @@ const Login = () => {
 export default Login;
 
 const styles = StyleSheet.create({
-  container: {
+  login: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#D5D5D5',
+  },
+  backgroundImage: {
+    flex: 1,
   },
   title: {
-    fontSize: 24,
+    color: '#FD9206',
+    fontSize: 50,
     fontWeight: 'bold',
-    marginBottom: 20,
   },
-  input_container: {
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    paddingBottom: 10,
+  },
+  inputContainer: {
     width: '90%',
     height: 50,
     paddingLeft: 10,
@@ -139,16 +145,22 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '90%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: 'black',
+    height: 60,
     borderRadius: 10,
     marginVertical: 10,
   },
   buttonText: {
-    color: 'black',
+    color: 'white',
     textAlign: 'center',
     lineHeight: 40,
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  registerContainer: {
+    flexDirection: 'row',
+  },
+  registerText: {
+    textDecorationLine: 'underline',
+    color: '#FD9206',
   },
 });

@@ -150,6 +150,8 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingTop: 30,
+    backgroundColor: '#ffffff',
+    height: '100%',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -169,6 +171,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   explore: {
+    marginTop: 20,
     fontSize: 35,
     fontWeight: 'bold',
   },

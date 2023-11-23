@@ -20,15 +20,27 @@ const HomeStackNavigation = () => {
         component={Home}
         options={{headerShown: false}}
       />
-      <HomeStack.Screen name="BMICalculator" component={BMICalculator} />
+      <HomeStack.Screen
+        name="BMICalculator"
+        component={BMICalculator}
+        options={{headerTitle: 'BMI Calculator'}}
+      />
       <HomeStack.Screen
         name="BMIResult"
         component={BMIResult}
         options={{headerTitle: 'BMI Result'}}
       />
-      <HomeStack.Screen name="Person" component={Person} />
+      <HomeStack.Screen
+        name="Person"
+        component={Person}
+        options={{headerTitle: 'Profile'}}
+      />
       <HomeStack.Screen name="MealPlan" component={MealPlan} />
-      <HomeStack.Screen name="MedicalHistory" component={MedicalHistory} />
+      <HomeStack.Screen
+        name="MedicalHistory"
+        component={MedicalHistory}
+        options={{headerTitle: 'Medical History'}}
+      />
       <HomeStack.Screen name="Jogging" component={Jogging} />
       <HomeStack.Screen name="Yoga" component={Yoga} />
       <HomeStack.Screen name="PushUp" component={PushUp} />

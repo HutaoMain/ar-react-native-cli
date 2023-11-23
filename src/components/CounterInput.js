@@ -28,7 +28,6 @@ const CounterInput = ({label, value, onIncrement, onDecrement}) => {
         <View
           style={{
             flexDirection: 'row',
-            gap: 20,
             marginTop: 15,
           }}>
           <TouchableOpacity
@@ -39,6 +38,7 @@ const CounterInput = ({label, value, onIncrement, onDecrement}) => {
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'black',
+              marginRight: 5,
             }}>
             <Text style={{fontSize: 18, color: 'white'}}>-</Text>
           </TouchableOpacity>
@@ -50,6 +50,7 @@ const CounterInput = ({label, value, onIncrement, onDecrement}) => {
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'black',
+              marginLeft: 5,
             }}>
             <Text style={{fontSize: 18, color: 'white'}}>+</Text>
           </TouchableOpacity>

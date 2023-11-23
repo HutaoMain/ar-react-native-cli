@@ -1,9 +1,8 @@
-// import { Ionicons } from "@expo/vector-icons";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import BMINavigationStack from './BMINavigationStack';
-
 import Person from '../screens/Person';
+import HomeStackNavigation from './HomeStackNavigation';
 
 const BottomTabNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -14,7 +13,7 @@ const BottomTabNavigation = () => {
         tabBarIcon: ({focused, size}) => {
           let iconName;
 
-          if (route.name === 'BMINavigationStack') {
+          if (route.name === 'HomeStackNavigation') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Home') {
             iconName = focused ? 'list-outline' : 'list-outline';
@@ -23,12 +22,11 @@ const BottomTabNavigation = () => {
           }
 
           return (
-            // <Ionicons
-            //   name={iconName}
-            //   size={size}
-            //   color={focused ? "#E44203" : "black"}
-            // />
-            <></>
+            <Ionicons
+              name={iconName}
+              size={size}
+              color={focused ? '#FD9206' : 'black'}
+            />
           );
         },
         tabBarStyle: {
@@ -38,10 +36,11 @@ const BottomTabNavigation = () => {
         tabBarShowLabel: false,
       })}>
       <Tab.Screen
-        name="BMINavigationStack"
-        component={BMINavigationStack}
+        name="HomeStackNavigation"
+        component={HomeStackNavigation}
         options={{headerShown: false}}
       />
+
       <Tab.Screen
         name="Person"
         component={Person}
