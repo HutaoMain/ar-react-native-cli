@@ -4,7 +4,6 @@
 
 # Xcode
 #
-build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -60,11 +59,17 @@ buck-out/
 
 
 
-# additional from me
-/src/API_URL.js
-/yarn.lock
-/assets
+
 /__tests__
 /.vscode
 
-/src/FirebaseConfig.js
+
+# additional from me
+/src/API_URL.js
+/yarn.lock
+# /assets
+/ios
+
+src/ENV.js
+android/java_pid20208.hprof
+android/java_pid13536.hprof

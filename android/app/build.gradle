@@ -125,6 +125,10 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    lintOptions { 
+        checkReleaseBuilds false
+    }
+
     defaultConfig {
         applicationId "com.myviroapp"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -132,6 +136,18 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
+    }
+
     splits {
         abi {
             reset()
@@ -153,6 +169,7 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
+             signingConfig signingConfigs.release
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
@@ -183,13 +200,15 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
+    compile project(':react-native-vector-icons')
+
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     implementation project(':gvr_common')
-    implementation project(':arcore_client')
+    implementation project(':arcore_client')    
     implementation project(path: ':react_viro')
     implementation project(path: ':viro_renderer')
-    implementation 'com.google.android.exoplayer:exoplayer:2.7.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
     implementation 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
@@ -222,5 +241,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
-// added react-native-vector-icons
-apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
