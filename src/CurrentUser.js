@@ -22,7 +22,6 @@ const useFetchUserData = () => {
             dateOfBirth: doc.data().dateOfBirth,
             email: doc.data().email,
             fullName: doc.data().fullName,
-            imageUrl: doc.data().imageUrl,
           };
           setUserData(userData);
         });

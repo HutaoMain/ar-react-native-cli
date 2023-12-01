@@ -1,54 +1,76 @@
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import DateSlider from '../components/DateSlider';
-import {format} from 'date-fns';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import MealPlanTime from '../components/MealPlanTime';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import React from 'react';
+import MealPlanCard from '../components/MealPlanCard';
+import {mealPlanData} from '../MealPlanData';
+import useFetchCurrentBmiData from '../CurrentBmiResult';
+import useFetchUserAllergies from '../CurrentUserAllergies';
 
 const MealPlan = () => {
-  //   const [bmiCategory, setBmiCategory] = useState("Normal");
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  const bmiResultData = useFetchCurrentBmiData();
+  const currentAllergiers = useFetchUserAllergies();
 
-  // Define meal plans for each BMI category
-  //   const bmiCategories = ["Underweight", "Normal", "Overweight", "Obese"];
+  console.log(currentAllergiers);
+
+  const groupMealPlansByDay = () => {
+    const groupedDays = {};
+
+    mealPlanData?.forEach((mealPlan, index) => {
+      const dayOfWeek = index % 7;
+      if (!groupedDays[dayOfWeek]) {
+        groupedDays[dayOfWeek] = [];
+      }
+
+      const isInBmiRange =
+        bmiResultData &&
+        bmiResultData.bmiResult >= mealPlan.bmiRange.min &&
+        bmiResultData.bmiResult <= mealPlan.bmiRange.max;
+
+      const containsAllergy = mealPlan.allergies.some(allergy =>
+        currentAllergiers?.allergies.includes(allergy),
+      );
+
+      if ((isInBmiRange || !bmiResultData) && !containsAllergy) {
+        groupedDays[dayOfWeek].push(mealPlan);
+      }
+    });
+
+    return groupedDays;
+  };
+
+  const daysWithMealPlans = groupMealPlansByDay();
 
   return (
-    <SafeAreaView style={{flex: 1, alignItems: 'center'}}>
-      <DateSlider
-        onDayPress={day => setSelectedDay(day)}
-        selectedDay={selectedDay}
-      />
-      <View style={{padding: 20}}>
-        {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-          Select BMI Category:
-        </Text>
-        <Picker
-          selectedValue={bmiCategory}
-          onValueChange={(itemValue) => setBmiCategory(itemValue)}
-        >
-          {bmiCategories.map((category) => (
-            <Picker.Item key={category} label={category} value={category} />
-          ))}
-        </Picker>
-        <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>
-          Your Meal Plan:
-        </Text>
-*/}
-        <MealPlanTime selectedDay={selectedDay} />
-        <Text style={{fontWeight: 'bold', fontSize: 20}}>
-          Selected Day: {selectedDay ? format(selectedDay, 'yyyy-MM-dd') : ''}
-        </Text>
-        {/* {mealForSelectedDay && (
-          <View>
-            <Text>Meal Name: {mealForSelectedDay.meals[0]?.strMeal}</Text>
-            {/* <Text>Category: {mealForSelectedDay}</Text> */}
-        {/* <Text>Instructions: {mealForSelectedDays}</Text> 
-          </View>
-        )} */}
-      </View>
-    </SafeAreaView>
+    <View>
+      <ScrollView>
+        {Object.keys(daysWithMealPlans).map((day, index) => (
+          <TouchableOpacity
+            key={index}
+            style={{
+              width: '100%',
+              alignItems: 'center',
+            }}>
+            <Text>{getDayName(parseInt(day))}</Text>
+            {daysWithMealPlans[parseInt(day)].map((mealPlan, key) => (
+              <MealPlanCard mealPlan={mealPlan} key={key} />
+            ))}
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
   );
+};
+
+const getDayName = day => {
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  return days[day];
 };
 
 export default MealPlan;

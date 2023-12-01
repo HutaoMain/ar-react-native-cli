@@ -20,6 +20,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
   const auth = FIREBASE_AUTH;
 
   const setUser = useAuthStore(state => state.setUser);
@@ -29,17 +30,24 @@ const Login = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setUser(email);
+      const {user} = await signInWithEmailAndPassword(auth, email, password);
+      if (user.emailVerified) {
+        setLoading(false);
+        setUser(email);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: `Please verify your email`,
+        });
+        setLoading(false);
+      }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
       Toast.show({
         type: 'error',
         text1: `Email or password is incorrect.`,
       });
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -53,7 +61,7 @@ const Login = () => {
         source={require('../../assets/background.jpg')}
         style={styles.backgroundImage}>
         <View style={styles.container}>
-          <Text style={styles.title}>FitAR</Text>
+          <Text style={styles.title}>Capt's Gym</Text>
           <View style={styles.inputContainer}>
             <Icon name="user" size={24} />
             <TextInput
@@ -116,8 +124,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#FD9206',
-    fontSize: 50,
+    fontSize: 45,
     fontWeight: 'bold',
+    marginBottom: 10,
   },
   container: {
     alignItems: 'center',
@@ -142,6 +151,9 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     color: 'black',
+  },
+  error: {
+    color: '#ff3333',
   },
   button: {
     width: '90%',

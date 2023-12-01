@@ -118,21 +118,6 @@ const Home = () => {
           <Text style={styles.buttonText}>Meal Planning</Text>
           <Icon name="controller-play" type="entypo" color="#517fa4" />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => navigateToScreen('MedicalHistory')}>
-          <View style={styles.iconContainer}>
-            <Image
-              source={{
-                uri: 'https://clipart-library.com/newhp/66-668690_medical-clipart-family-practice-family-medicine-obstetrics.png',
-              }}
-              style={styles.icon}
-            />
-          </View>
-          <Text style={styles.buttonText}>Medical History</Text>
-          <Icon name="controller-play" type="entypo" color="#517fa4" />
-        </TouchableOpacity>
       </View>
       {/*  */}
       <Text style={styles.explore}>Workouts</Text>
