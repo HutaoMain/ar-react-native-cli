@@ -12,3 +12,6 @@ git rm -r --cached <filename>
 1. sudo rm -rf android/ ios/
 2. yarn add react-native-eject
 3. npx react-native eject
+
+
+react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res

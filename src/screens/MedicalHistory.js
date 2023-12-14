@@ -12,6 +12,8 @@ import {FIRESTORE_DB} from '../FirebaseConfig';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {useNavigation} from '@react-navigation/native';
 import useAuthStore from '../zustand/AuthStore';
+import useFetchMedicalHistory from '../CurrentMedicalHistory';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MedicalHistory = () => {
   const [formData, setFormData] = useState({
@@ -22,13 +24,20 @@ const MedicalHistory = () => {
 
   const user = useAuthStore(state => state.user);
 
+  const currentMedicalHistory = useFetchMedicalHistory();
+
   const navigate = useNavigation();
 
   const saveFormDataToFirebase = async () => {
+    const medicalHistoryRef = doc(
+      FIRESTORE_DB,
+      'medicalHistory',
+      currentMedicalHistory.id,
+    );
+
     try {
-      await addDoc(collection(FIRESTORE_DB, 'medicalHistory'), {
+      await updateDoc(medicalHistoryRef, {
         email: user,
-        allergies: formData.allergies,
         currentMedications: formData.currentMedications,
         medicalConditions: formData.medicalConditions,
         createdAt: serverTimestamp(),
@@ -48,13 +57,6 @@ const MedicalHistory = () => {
     }
   };
 
-  const handleAllergiesChange = text => {
-    setFormData(data => ({
-      ...data,
-      allergies: text,
-    }));
-  };
-
   const handleCurrentMedicationsChange = text => {
     setFormData(data => ({
       ...data,
@@ -69,21 +71,11 @@ const MedicalHistory = () => {
     }));
   };
 
+  const disabled =
+    formData.currentMedications === '' && formData.medicalConditions === '';
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Medical History Form</Text>
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Allergies</Text>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="List any allergies..."
-          multiline
-          numberOfLines={4}
-          placeholderTextColor="black"
-          onChangeText={handleAllergiesChange}
-          value={formData.allergies}
-        />
-      </View>
       <View style={styles.formGroup}>
         <Text style={styles.label}>Current Medications</Text>
         <TextInput
@@ -93,7 +85,7 @@ const MedicalHistory = () => {
           numberOfLines={4}
           placeholderTextColor="black"
           onChangeText={handleCurrentMedicationsChange}
-          value={formData.currentMedications}
+          defaultValue={currentMedicalHistory?.currentMedications}
         />
       </View>
       <View style={styles.formGroup}>
@@ -105,20 +97,28 @@ const MedicalHistory = () => {
           numberOfLines={4}
           placeholderTextColor="black"
           onChangeText={handleMedicalConditionsChange}
-          value={formData.medicalConditions}
+          defaultValue={currentMedicalHistory?.medicalConditions}
         />
       </View>
+      {/*  */}
       <TouchableOpacity
-        onPress={saveFormDataToFirebase}
-        style={{
-          borderWidth: 1,
-          borderColor: 'black',
-          height: 50,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Text>Save</Text>
+        style={disabled ? styles.disabledButton : styles.button}
+        onPress={saveFormDataToFirebase}>
+        <LinearGradient
+          colors={disabled ? ['#dddddd', '#dddddd'] : ['#FFAA21', '#FFC42C']}
+          style={{
+            flex: 1,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 10,
+          }}>
+          <Text style={styles.buttonText}>
+            <Text>Save</Text>
+          </Text>
+        </LinearGradient>
       </TouchableOpacity>
+      {/*  */}
     </ScrollView>
   );
 };
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-
+    position: 'relative',
     paddingTop: 20,
     backgroundColor: '#ffffff',
   },
@@ -153,6 +153,49 @@ const styles = StyleSheet.create({
   multilineInput: {
     height: 100,
     textAlignVertical: 'top',
+  },
+
+  // allergies
+  allergies: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  allergenContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  allergenButton: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+    padding: 10,
+    margin: 5,
+  },
+  selectedAllergen: {
+    backgroundColor: '#64b5f6',
+  },
+  allergenText: {
+    fontSize: 14,
+  },
+
+  button: {
+    width: '100%',
+    height: 60,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  disabledButton: {
+    width: '100%',
+    height: 60,
+    borderRadius: 10,
+    marginTop: 10,
+    backgroundColor: 'gray',
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    lineHeight: 40,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

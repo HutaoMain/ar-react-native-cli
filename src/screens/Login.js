@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   ImageBackground,
+  Modal,
+  ScrollView,
 } from 'react-native';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -20,6 +22,38 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const termsAndConditionsContent = `
+    App Content and Information
+    a. The App provides workout plans, exercise routines, fitness tips, and related information for informational purposes only.
+    b. The Content is not intended as a substitute for professional advice, diagnosis, or treatment. Always consult with a qualified healthcare or fitness professional before starting any exercise program.
+
+    User Responsibilities:
+    a. You are solely responsible for your use of the App and for following the workout plans and exercises at your own risk.
+    b. It is your responsibility to ensure that you are physically capable of performing the exercises and that you do so with proper form and technique.
+    c. You acknowledge that participation in physical activities carries inherent risks, and you agree to assume full responsibility for any injuries or damages that may result from your use of the App.
+
+    Personal Information and Privacy:
+    a. We may collect and use personal information as described in our Privacy Policy. By using the App, you consent to the collection, storage, and use of your information in accordance with our Privacy Policy.
+    b. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.
+
+    Intellectual Property:
+    a. The App and its Content are owned by us and are protected by copyright and other intellectual property laws.
+    b. You may not copy, modify, distribute, sell, lease, or exploit any part of the App or its Content without our prior written consent.
+
+    Limitation of Liability:
+    a. To the maximum extent permitted by law, we shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages arising out of or in connection with your use of the App.
+    b. We do not warrant the accuracy, completeness, or reliability of the Content, and we do not guarantee specific results from using the App.
+
+    Modification and Termination:
+    a. We reserve the right to modify or terminate the App or any part of it at any time without prior notice.
+    b. We may also modify this Agreement from time to time, and it is your responsibility to review the Agreement periodically. Continued use of the App after any modifications constitutes your acceptance of the modified Agreement.
+
+    Governing Law:
+    a. This Agreement shall be governed and construed in accordance with the laws of [Jurisdiction].
+    b. Any legal action arising out of or relating to this Agreement shall be filed in the courts of [Jurisdiction].
+  `;
 
   const auth = FIREBASE_AUTH;
 
@@ -108,6 +142,33 @@ const Login = () => {
             </Text>
           </View>
         </View>
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 20,
+            width: '100%',
+            alignItems: 'center',
+          }}>
+          <Text>By logging in, you agree to Capt's gym</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text style={styles.linkText}>Terms and Conditions</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <ScrollView style={styles.modalContent}>
+              <Text>{termsAndConditionsContent}</Text>
+            </ScrollView>
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeButton}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </ImageBackground>
     </View>
   );
@@ -121,6 +182,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
+    position: 'relative',
   },
   title: {
     color: '#FD9206',
@@ -174,5 +236,27 @@ const styles = StyleSheet.create({
   registerText: {
     textDecorationLine: 'underline',
     color: '#FD9206',
+  },
+  linkText: {
+    color: 'blue',
+    textDecorationLine: 'underline',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    maxHeight: '80%',
+    width: '90%',
+  },
+  closeButton: {
+    color: 'blue',
+    textDecorationLine: 'underline',
+    marginTop: 10,
   },
 });

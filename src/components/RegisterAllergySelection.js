@@ -9,9 +9,10 @@ import {
 import 'firebase/firestore';
 import LinearGradient from 'react-native-linear-gradient';
 import updateUserAllergies from '../UpdateUserAllergies';
-import {addDoc, serverTimestamp} from 'firebase/firestore';
+import {addDoc, collection, serverTimestamp} from 'firebase/firestore';
 import useAuthStore from '../zustand/AuthStore';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
+import {FIRESTORE_DB} from '../FirebaseConfig';
 
 const allergens = [
   'Milk',
@@ -28,11 +29,9 @@ const allergens = [
 const RegisterAllergySelection = ({userEmail, handleRegistration, loading}) => {
   const [selectedAllergies, setSelectedAllergies] = useState([]);
   const [formData, setFormData] = useState({
-    currentMedications: '',
-    medicalConditions: '',
+    currentMedications: 'none',
+    medicalConditions: 'none',
   });
-
-  const user = useAuthStore(state => state.user);
 
   const updatedAllergiesRef = useRef([]);
 
@@ -47,19 +46,18 @@ const RegisterAllergySelection = ({userEmail, handleRegistration, loading}) => {
 
   // * medical history
   const saveMedicalHistory = async () => {
+    const medicalHistoryCollectionRef = collection(
+      FIRESTORE_DB,
+      'medicalHistory',
+    );
+
     try {
-      await addDoc(collection(FIRESTORE_DB, 'medicalHistory'), {
-        email: user,
+      await addDoc(medicalHistoryCollectionRef, {
+        email: userEmail,
         currentMedications: formData.currentMedications,
         medicalConditions: formData.medicalConditions,
         createdAt: serverTimestamp(),
       });
-      console.log('After addDoc');
-      Toast.show({
-        type: 'success',
-        text1: `Successfully Saved Medical History`,
-      });
-      navigate.navigate('Home');
     } catch (error) {
       Toast.show({
         type: 'error',

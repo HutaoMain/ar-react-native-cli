@@ -23,7 +23,7 @@ const Navbar = () => {
         </Text>
       </View>
       <UserInitialsAvatar
-        name={userData?.fullName || ''}
+        name={userData?.email || ''}
         initialStyle={styles.initials}
         initialContainer={styles.avatar}
       />

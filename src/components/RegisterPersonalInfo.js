@@ -11,7 +11,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 
-const RegisterPersonalInfo = ({setName, dateOfBirth, setDateOfBirth}) => {
+const RegisterPersonalInfo = ({name, setName, dateOfBirth, setDateOfBirth}) => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDateOfBirth(currentDate);
@@ -23,6 +23,7 @@ const RegisterPersonalInfo = ({setName, dateOfBirth, setDateOfBirth}) => {
       onChange,
       mode: currentMode,
       is24Hour: true,
+      maximumDate: moment().subtract(16, 'years').toDate(),
     });
   };
 
@@ -36,6 +37,7 @@ const RegisterPersonalInfo = ({setName, dateOfBirth, setDateOfBirth}) => {
         <MaterialCommunityIcons name="email-outline" size={24} color="black" />
         <TextInput
           style={styles.input}
+          value={name}
           placeholder="Full name"
           placeholderTextColor="black"
           onChangeText={setName}

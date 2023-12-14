@@ -3,13 +3,19 @@ import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const RegisterAccountInfo = ({setEmail, setPassword, setConfirmPassword}) => {
+const RegisterAccountInfo = ({
+  email,
+  setEmail,
+  setPassword,
+  setConfirmPassword,
+}) => {
   return (
     <>
       <View style={styles.inputContainer}>
         <MaterialCommunityIcons name="email-outline" size={24} color="black" />
         <TextInput
           style={styles.input}
+          value={email}
           placeholder="Email"
           placeholderTextColor="black"
           onChangeText={setEmail}

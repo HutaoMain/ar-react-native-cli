@@ -1,10 +1,18 @@
 import {useState, useEffect} from 'react';
 import {FIRESTORE_DB} from './FirebaseConfig';
 import useAuthStore from './zustand/AuthStore';
-import {collection, getDocs, query, where} from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore';
 
 const useFetchCurrentBmiData = () => {
   const [bmiResult, setBmiResult] = useState();
+
   const user = useAuthStore(state => state.user);
 
   useEffect(() => {
@@ -12,6 +20,8 @@ const useFetchCurrentBmiData = () => {
       const q = query(
         collection(FIRESTORE_DB, 'bmiResult'),
         where('email', '==', user),
+        orderBy('createdAt', 'desc'), // Order by createdAt in descending order
+        limit(1), // Limit to the latest result
       );
 
       try {

@@ -6,9 +6,14 @@ import Home from '../screens/Home';
 import MedicalHistory from '../screens/MedicalHistory';
 import Person from '../screens/Person';
 import MealPlan from '../screens/MealPlan';
-import Jogging from '../screens/Jogging';
-import Yoga from '../screens/Yoga';
-import PushUp from '../screens/PushUp';
+import WeightLossIntermediate from '../screens/WeightLossIntermediate';
+import WeightLossAdvance from '../screens/WeightLossAdvance';
+import WeightLossBeginnerNavigation from './WeightLossBeginnerNavigation';
+import WeightLossIntermediateNavigation from './WeightLossIntermediateNavigation';
+import WeightLossAdvanceNavigation from './WeightLossAdvanceNavigation';
+import MuscleGainBeginnerNavigation from './MuscleGainBeginnerNavigation';
+import MuscleGainIntermediateNavigation from './MuscleGainIntermediateNavigation';
+import MuscleGainAdvanceNavigation from './MuscleGainAdvanceNavigation';
 
 const HomeStackNavigation = () => {
   const HomeStack = createNativeStackNavigator();
@@ -41,9 +46,40 @@ const HomeStackNavigation = () => {
         component={MedicalHistory}
         options={{headerTitle: 'Medical History'}}
       />
-      <HomeStack.Screen name="Jogging" component={Jogging} />
-      <HomeStack.Screen name="Yoga" component={Yoga} />
-      <HomeStack.Screen name="PushUp" component={PushUp} />
+      {/*  */}
+      <HomeStack.Screen
+        name="WeightLossBeginnerNavigation"
+        component={WeightLossBeginnerNavigation}
+        options={{headerTitle: 'Beginner'}}
+      />
+      <HomeStack.Screen
+        name="WeightLossIntermediateNavigation"
+        component={WeightLossIntermediateNavigation}
+        options={{headerTitle: 'intermediate'}}
+      />
+      <HomeStack.Screen
+        name="WeightLossAdvanceNavigation"
+        component={WeightLossAdvanceNavigation}
+        options={{headerTitle: 'Advance'}}
+      />
+      {/*  */}
+
+      <HomeStack.Screen
+        name="MuscleGainBeginnerNavigation"
+        component={MuscleGainBeginnerNavigation}
+        options={{headerTitle: 'Beginner'}}
+      />
+      <HomeStack.Screen
+        name="MuscleGainIntermediateNavigation"
+        component={MuscleGainIntermediateNavigation}
+        options={{headerTitle: 'intermediate'}}
+      />
+      <HomeStack.Screen
+        name="MuscleGainAdvanceNavigation"
+        component={MuscleGainAdvanceNavigation}
+        options={{headerTitle: 'Advance'}}
+      />
+      {/*  */}
     </HomeStack.Navigator>
   );
 };

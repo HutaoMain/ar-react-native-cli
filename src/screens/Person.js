@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -17,11 +17,22 @@ import {FIREBASE_AUTH} from '../FirebaseConfig';
 import UserInitialsAvatar from '../components/UsersInitialAvatar';
 
 const Person = () => {
+  const [currentAge, setCurrentAge] = useState(0);
   const userData = useFetchUserData();
 
   const bmiResult = useFetchCurrentBmiData();
 
   const auth = FIREBASE_AUTH;
+
+  useEffect(() => {
+    if (userData && userData.dateOfBirth) {
+      const birthdate = moment(userData.dateOfBirth.toDate());
+      const today = moment();
+      const age = today.diff(birthdate, 'years');
+      console.log('eto ung age nya', age);
+      setCurrentAge(age);
+    }
+  }, [userData]);
 
   const clearUser = useAuthStore(state => state.clearUser);
   const handleLogout = () => {
@@ -39,7 +50,7 @@ const Person = () => {
     <View style={styles.container}>
       <View style={styles.coverPhotoContainer}>
         <UserInitialsAvatar
-          name={userData?.fullName || ''}
+          name={userData?.email || ''}
           initialStyle={styles.initials}
           initialContainer={styles.initialContainer}
         />
@@ -51,7 +62,7 @@ const Person = () => {
           <View style={styles.infoColumn}>
             <Text style={styles.infoLabel}>Age</Text>
             <Text style={styles.infoValue}>
-              {bmiResult?.age ? bmiResult.age : 'Please go to BMI Calculator'}
+              {currentAge !== 0 ? currentAge : 'N/A'}
             </Text>
           </View>
           <View style={styles.infoColumn}>
@@ -59,7 +70,7 @@ const Person = () => {
             <Text style={styles.infoValue}>
               {bmiResult?.weight
                 ? bmiResult?.weight + 'kg'
-                : 'Please go to BMI Calculator'}
+                : 'Admin will calculate your BMI'}
             </Text>
           </View>
           <View style={styles.infoColumn}>
@@ -67,7 +78,7 @@ const Person = () => {
             <Text style={styles.infoValue}>
               {bmiResult?.height
                 ? bmiResult.height + 'cm'
-                : 'Please go to BMI Calculator'}
+                : 'Admin will calculate your BMI'}
             </Text>
           </View>
         </View>
@@ -75,7 +86,7 @@ const Person = () => {
           <View style={styles.infoColumn}>
             <Text style={styles.infoLabel}>Birthday</Text>
             <Text style={styles.infoValue}>
-              {moment(userData?.dateOfBirth.toDate()).format('YYYY-MM-DD')}
+              {moment(userData?.dateOfBirth.toDate()).format('YY-MMM-DD')}
             </Text>
           </View>
           <View style={styles.infoColumn}>
@@ -83,12 +94,12 @@ const Person = () => {
             <Text style={styles.infoValue}>
               {bmiResult?.bmiResult
                 ? bmiResult.bmiResult
-                : 'Please go to BMI Calculator'}
+                : 'Admin will calculate your BMI'}
             </Text>
-            <Text>
+            <Text style={{fontSize: 14, color: '#535353'}}>
               {bmiResult?.bmiCategory
                 ? bmiResult.bmiCategory
-                : 'Please go to BMI Calculator'}
+                : 'Admin will calculate your BMI'}
             </Text>
           </View>
           <View style={styles.infoColumn}>
@@ -96,7 +107,7 @@ const Person = () => {
             <Text style={[styles.infoValue, {textTransform: 'capitalize'}]}>
               {bmiResult?.gender
                 ? bmiResult.gender
-                : 'Please go to BMI Calculator'}
+                : 'Admin will calculate your BMI'}
             </Text>
           </View>
         </View>
@@ -186,6 +197,7 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: 16,
+    textAlign: 'center',
   },
   initialContainer: {
     width: 150,
