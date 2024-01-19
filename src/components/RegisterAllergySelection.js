@@ -1,18 +1,8 @@
 import React, {useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import 'firebase/firestore';
 import LinearGradient from 'react-native-linear-gradient';
 import updateUserAllergies from '../UpdateUserAllergies';
-import {addDoc, collection, serverTimestamp} from 'firebase/firestore';
-import useAuthStore from '../zustand/AuthStore';
-import {Toast} from 'react-native-toast-message/lib/src/Toast';
-import {FIRESTORE_DB} from '../FirebaseConfig';
 
 const allergens = [
   'Milk',
@@ -28,10 +18,6 @@ const allergens = [
 
 const RegisterAllergySelection = ({userEmail, handleRegistration, loading}) => {
   const [selectedAllergies, setSelectedAllergies] = useState([]);
-  const [formData, setFormData] = useState({
-    currentMedications: 'none',
-    medicalConditions: 'none',
-  });
 
   const updatedAllergiesRef = useRef([]);
 
@@ -44,51 +30,13 @@ const RegisterAllergySelection = ({userEmail, handleRegistration, loading}) => {
     updatedAllergiesRef.current = updatedAllergies;
   };
 
-  // * medical history
-  const saveMedicalHistory = async () => {
-    const medicalHistoryCollectionRef = collection(
-      FIRESTORE_DB,
-      'medicalHistory',
-    );
-
-    try {
-      await addDoc(medicalHistoryCollectionRef, {
-        email: userEmail,
-        currentMedications: formData.currentMedications,
-        medicalConditions: formData.medicalConditions,
-        createdAt: serverTimestamp(),
-      });
-    } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: `Error adding document`,
-      });
-      console.error('Error adding document: ', error);
-    }
-  };
-
   const handleSubmit = async () => {
     try {
       handleRegistration();
-      saveMedicalHistory();
       await updateUserAllergies(userEmail, updatedAllergiesRef.current);
     } catch (error) {
       console.error('Error updating user allergies:', error);
     }
-  };
-
-  const handleCurrentMedicationsChange = text => {
-    setFormData(data => ({
-      ...data,
-      currentMedications: text,
-    }));
-  };
-
-  const handleMedicalConditionsChange = text => {
-    setFormData(data => ({
-      ...data,
-      medicalConditions: text,
-    }));
   };
 
   return (
@@ -108,32 +56,6 @@ const RegisterAllergySelection = ({userEmail, handleRegistration, loading}) => {
             </TouchableOpacity>
           ))}
         </View>
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Current Medications</Text>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="List current medications..."
-          multiline
-          numberOfLines={3}
-          placeholderTextColor="black"
-          onChangeText={handleCurrentMedicationsChange}
-          value={formData.currentMedications}
-        />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Medical Conditions</Text>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="List any medical conditions..."
-          multiline
-          numberOfLines={3}
-          placeholderTextColor="black"
-          onChangeText={handleMedicalConditionsChange}
-          value={formData.medicalConditions}
-        />
       </View>
 
       <View

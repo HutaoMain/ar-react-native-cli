@@ -13,18 +13,18 @@ const BMICalculator = () => {
   const [height, setHeight] = useState(160);
   const [weight, setWeight] = useState(60);
   const [age, setAge] = useState(25);
-  const [bmiResult, setBMIResult] = useState(0);
+  const [bmiResultState, setBmiResultState] = useState(0);
 
   const navigate = useNavigation();
 
-  const bmiResultData = useFetchCurrentBmiData();
+  const {bmiResultData} = useFetchCurrentBmiData();
 
   useEffect(() => {
     setGender(bmiResultData?.gender || '');
     setHeight(bmiResultData?.height || 160);
     setWeight(bmiResultData?.weight || 160);
     setAge(bmiResultData?.age || 25);
-    setBMIResult(bmiResultData?.bmiResult || 0);
+    setBmiResultState(bmiResultData?.bmiResult || 0);
 
     console.log('sample');
   }, [bmiResultData]);
@@ -35,16 +35,16 @@ const BMICalculator = () => {
     const heightInMeters = height / 100;
     const bmi = weight / (heightInMeters * heightInMeters);
     const finalBmi = Math.round(bmi * 1e2) / 1e2;
-    setBMIResult(finalBmi);
+    setBmiResultState(finalBmi);
   });
 
   const handleSubmitBmiResult = () => {
     let bmiCategory = '';
-    if (bmiResult < 18.5) {
+    if (bmiResultState < 18.5) {
       bmiCategory = 'Underweight';
-    } else if (bmiResult >= 18.5 && bmiResult < 24.9) {
+    } else if (bmiResultState >= 18.5 && bmiResultState < 24.9) {
       bmiCategory = 'Normal';
-    } else if (bmiResult >= 25 && bmiResult < 29.9) {
+    } else if (bmiResultState >= 25 && bmiResultState < 29.9) {
       bmiCategory = 'Overweight';
     } else {
       bmiCategory = 'Obese';
@@ -55,7 +55,7 @@ const BMICalculator = () => {
       height: height,
       weight: weight,
       age: age,
-      bmiResult: bmiResult,
+      bmiResult: bmiResultState,
       bmiCategory: bmiCategory,
     });
   };

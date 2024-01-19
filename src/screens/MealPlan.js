@@ -6,7 +6,7 @@ import useFetchCurrentBmiData from '../CurrentBmiResult';
 import useFetchUserAllergies from '../CurrentUserAllergies';
 
 const MealPlan = () => {
-  const bmiResultData = useFetchCurrentBmiData();
+  const {bmiResultData} = useFetchCurrentBmiData();
   const currentAllergiers = useFetchUserAllergies();
 
   console.log(currentAllergiers);

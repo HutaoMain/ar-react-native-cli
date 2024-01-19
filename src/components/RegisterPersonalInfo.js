@@ -8,10 +8,18 @@ import {
 import React from 'react';
 import moment from 'moment';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import EntypoIcons from 'react-native-vector-icons/Entypo';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 
-const RegisterPersonalInfo = ({name, setName, dateOfBirth, setDateOfBirth}) => {
+const RegisterPersonalInfo = ({
+  name,
+  setName,
+  setAddress,
+  dateOfBirth,
+  setDateOfBirth,
+  setMedicalConditions,
+}) => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDateOfBirth(currentDate);
@@ -41,6 +49,29 @@ const RegisterPersonalInfo = ({name, setName, dateOfBirth, setDateOfBirth}) => {
           placeholder="Full name"
           placeholderTextColor="black"
           onChangeText={setName}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <EntypoIcons name="location" size={24} color="black" />
+        <TextInput
+          style={styles.input}
+          value={name}
+          placeholder="Address"
+          placeholderTextColor="black"
+          onChangeText={setAddress}
+        />
+      </View>
+
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Medical Conditions</Text>
+        <TextInput
+          style={[styles.inputMedical, styles.multilineInput]}
+          placeholder="List any medical conditions..."
+          multiline
+          numberOfLines={3}
+          placeholderTextColor="black"
+          onChangeText={setMedicalConditions}
         />
       </View>
 
@@ -84,6 +115,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     fontSize: 16,
     color: 'black',
+  },
+  formGroup: {
+    marginBottom: 8,
+    width: '90%',
+  },
+  inputMedical: {
+    backgroundColor: '#F4F7FF',
+    borderRadius: 5,
+    padding: 10,
+    color: 'black',
+  },
+  multilineInput: {
+    height: 100,
+    textAlignVertical: 'top',
   },
 });
 

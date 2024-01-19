@@ -1,6 +1,10 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {FIRESTORE_DB} from '../FirebaseConfig';
+import {addDoc, collection} from 'firebase/firestore';
+import useAuthStore from '../zustand/AuthStore';
+import moment from 'moment';
 
 const data = [
   {
@@ -28,7 +32,20 @@ const data = [
 const MuscleGainIntermediate = () => {
   const navigation = useNavigation();
 
-  const navigateToScreen = screenName => {
+  const user = useAuthStore(state => state.user);
+
+  const handleSaveWorkoutProgress = async nameOfWork => {
+    const usersCollectionRef = collection(FIRESTORE_DB, 'workProgress');
+
+    await addDoc(usersCollectionRef, {
+      email: user,
+      date: moment(new Date()).format('YYYY-MM-DD hh:mm A'),
+      nameOfWork: nameOfWork,
+    });
+  };
+
+  const navigateToScreen = (screenName, title) => {
+    handleSaveWorkoutProgress(title);
     navigation.navigate(screenName);
   };
 
@@ -38,16 +55,16 @@ const MuscleGainIntermediate = () => {
       onPress={() => {
         switch (item.title) {
           case 'Explosive Pushup':
-            navigateToScreen('ARScreenExplosivePushup');
+            navigateToScreen('ARScreenExplosivePushup', item.title);
             break;
           case 'Lateral Raises':
-            navigateToScreen('ARScreenLateralRaises');
+            navigateToScreen('ARScreenLateralRaises', item.title);
             break;
           case 'Standing Dumbell Press':
-            navigateToScreen('ARScreenSideLunges');
+            navigateToScreen('ARScreenSideLunges', item.title);
             break;
           case 'Wide Pushup':
-            navigateToScreen('ARScreenWidePushup');
+            navigateToScreen('ARScreenWidePushup', item.title);
             break;
 
           default:

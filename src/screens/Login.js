@@ -13,16 +13,28 @@ import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import useAuthStore from '../zustand/AuthStore';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {FIREBASE_AUTH} from '../FirebaseConfig';
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import {FIREBASE_AUTH, FIRESTORE_DB} from '../FirebaseConfig';
 import Icon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
+import {
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [forgotPassLoading, setForgotPassLoading] = useState(false);
 
   const termsAndConditionsContent = `
     App Content and Information
@@ -61,11 +73,28 @@ const Login = () => {
 
   const navigation = useNavigation();
 
+  const userCollectionRef = collection(FIRESTORE_DB, 'users');
+  const user = useAuthStore(state => state.user);
+
+  const trackLoginDuration = async () => {
+    const userQuery = query(userCollectionRef, where('email', '==', user));
+    const userSnapshot = await getDocs(userQuery);
+
+    if (!userSnapshot.empty) {
+      const userDoc = userSnapshot.docs[0];
+
+      await updateDoc(userDoc.ref, {
+        lastLoginTime: serverTimestamp(),
+      });
+    }
+  };
+
   const handleLogin = async () => {
     setLoading(true);
     try {
       const {user} = await signInWithEmailAndPassword(auth, email, password);
       if (user.emailVerified) {
+        trackLoginDuration();
         setLoading(false);
         setUser(email);
       } else {
@@ -82,6 +111,24 @@ const Login = () => {
         text1: `Email or password is incorrect.`,
       });
       console.log(error);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    setForgotPassLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      Toast.show({
+        type: 'success',
+        text1: `Please check your email to reset your password.`,
+      });
+      setForgotPassLoading(false);
+    } catch (error) {
+      setForgotPassLoading(false);
+      Toast.show({
+        type: 'error',
+        text1: `Not able to reset your password.`,
+      });
     }
   };
 
@@ -117,6 +164,18 @@ const Login = () => {
               placeholderTextColor="black"
             />
           </View>
+
+          <View style={styles.forgotContainer}>
+            <Text></Text>
+            <TouchableOpacity
+              style={styles.forgotPass}
+              onPress={handleForgotPassword}>
+              <Text style={{color: '#FD9206'}}>
+                {forgotPassLoading ? 'Please wait' : 'Forgot password?'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity onPress={handleLogin} style={styles.button}>
             <LinearGradient
               colors={['#FFAA21', '#FFC42C']}
@@ -213,6 +272,14 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     color: 'black',
+  },
+  forgotContainer: {
+    flexDirection: 'row',
+    width: '80%',
+    justifyContent: 'space-between',
+  },
+  forgotPass: {
+    backgroundColor: 'transparent',
   },
   error: {
     color: '#ff3333',

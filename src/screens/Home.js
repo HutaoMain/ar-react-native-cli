@@ -68,9 +68,9 @@ const Home = () => {
 
   const navigation = useNavigation();
 
-  const userData = useFetchUserData();
+  const {userData, refreshUser} = useFetchUserData();
 
-  const bmiResult = useFetchCurrentBmiData();
+  const {bmiResultData} = useFetchCurrentBmiData();
 
   console.log(userData);
 
@@ -82,6 +82,7 @@ const Home = () => {
     setIsRefreshing(true);
     setRefreshTrigger(!refreshTrigger);
     setIsRefreshing(false);
+    refreshUser();
   };
 
   const renderItem = ({item}) => (
@@ -137,25 +138,8 @@ const Home = () => {
             <Text style={styles.buttonText}>Meal Planning</Text>
             <Icon name="controller-play" type="entypo" color="#517fa4" />
           </TouchableOpacity>
-          {/* medical history */}
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => navigateToScreen('MedicalHistory')}>
-            <View style={styles.iconContainer}>
-              <Image
-                source={{
-                  uri: 'https://clipart-library.com/img/1940377.png',
-                }}
-                style={styles.icon}
-              />
-            </View>
-            <Text style={styles.buttonText}>Medical History</Text>
-            <Icon name="controller-play" type="entypo" color="#517fa4" />
-          </TouchableOpacity>
         </View>
-        {/*  */}
-
-        {bmiResult?.bmiResult <= 24.9 ? (
+        {bmiResultData?.bmiResult <= 24.9 ? (
           <>
             <Text style={styles.explore}>Workouts (Muscle gain)</Text>
             <FlatList

@@ -4,7 +4,7 @@ import UserInitialsAvatar from './UsersInitialAvatar';
 import useFetchUserData from '../CurrentUser';
 
 const Navbar = () => {
-  const userData = useFetchUserData();
+  const {userData} = useFetchUserData();
 
   return (
     <View

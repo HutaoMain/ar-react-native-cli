@@ -24,6 +24,8 @@ import moment from 'moment';
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [medicalConditions, setMedicalConditions] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -69,6 +71,8 @@ const Register = () => {
         dateOfBirth: dateOfBirth,
         bmiReminder: false,
         membership: 'non-member',
+        address: address,
+        medicalConditions: medicalConditions,
         role: 'user',
       });
 
@@ -102,6 +106,8 @@ const Register = () => {
             setName={setName}
             dateOfBirth={dateOfBirth}
             setDateOfBirth={setDateOfBirth}
+            setAddress={setAddress}
+            setMedicalConditions={setMedicalConditions}
           />
         );
       case 2:

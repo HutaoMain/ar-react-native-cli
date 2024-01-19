@@ -1,6 +1,10 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {FIRESTORE_DB} from '../FirebaseConfig';
+import {addDoc, collection} from 'firebase/firestore';
+import useAuthStore from '../zustand/AuthStore';
+import moment from 'moment';
 
 const data = [
   {
@@ -28,7 +32,20 @@ const data = [
 const WeightLossAdvance = () => {
   const navigation = useNavigation();
 
-  const navigateToScreen = screenName => {
+  const user = useAuthStore(state => state.user);
+
+  const handleSaveWorkoutProgress = async nameOfWork => {
+    const usersCollectionRef = collection(FIRESTORE_DB, 'workProgress');
+
+    await addDoc(usersCollectionRef, {
+      email: user,
+      date: moment(new Date()).format('YYYY-MM-DD hh:mm A'),
+      nameOfWork: nameOfWork,
+    });
+  };
+
+  const navigateToScreen = (screenName, title) => {
+    handleSaveWorkoutProgress(title);
     navigation.navigate(screenName);
   };
 
@@ -38,16 +55,16 @@ const WeightLossAdvance = () => {
       onPress={() => {
         switch (item.title) {
           case 'Burpees':
-            navigateToScreen('ARScreenBurpees');
+            navigateToScreen('ARScreenBurpees', item.title);
             break;
           case 'Jumping Rope':
-            navigateToScreen('ARScreenJumpingRope');
+            navigateToScreen('ARScreenJumpingRope', item.title);
             break;
           case 'Mountain Climbing':
-            navigateToScreen('ARScreenMountainClimbing');
+            navigateToScreen('ARScreenMountainClimbing', item.title);
             break;
           case 'Skate Exercises':
-            navigateToScreen('ARScreenSkateExercises');
+            navigateToScreen('ARScreenSkateExercises', item.title);
             break;
 
           default:

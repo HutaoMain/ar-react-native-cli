@@ -3,11 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BMICalculator from '../screens/BMICalculator';
 import BMIResult from '../screens/BMIResult';
 import Home from '../screens/Home';
-import MedicalHistory from '../screens/MedicalHistory';
 import Person from '../screens/Person';
 import MealPlan from '../screens/MealPlan';
-import WeightLossIntermediate from '../screens/WeightLossIntermediate';
-import WeightLossAdvance from '../screens/WeightLossAdvance';
 import WeightLossBeginnerNavigation from './WeightLossBeginnerNavigation';
 import WeightLossIntermediateNavigation from './WeightLossIntermediateNavigation';
 import WeightLossAdvanceNavigation from './WeightLossAdvanceNavigation';
@@ -41,11 +38,6 @@ const HomeStackNavigation = () => {
         options={{headerTitle: 'Profile'}}
       />
       <HomeStack.Screen name="MealPlan" component={MealPlan} />
-      <HomeStack.Screen
-        name="MedicalHistory"
-        component={MedicalHistory}
-        options={{headerTitle: 'Medical History'}}
-      />
       {/*  */}
       <HomeStack.Screen
         name="WeightLossBeginnerNavigation"

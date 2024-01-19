@@ -10,9 +10,14 @@ import {
   where,
 } from 'firebase/firestore';
 
-const useFetchCurrentBmiData = () => {
-  const [bmiResult, setBmiResult] = useState();
+let isRefresh = false;
 
+export const refreshBmi = () => {
+  isRefresh = !isRefresh;
+};
+
+const useFetchCurrentBmiData = () => {
+  const [bmiResultData, setBmiResultData] = useState();
   const user = useAuthStore(state => state.user);
 
   useEffect(() => {
@@ -39,7 +44,7 @@ const useFetchCurrentBmiData = () => {
             height: doc.data().height,
             weight: doc.data().weight,
           };
-          setBmiResult(bmiResultData);
+          setBmiResultData(bmiResultData);
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -47,9 +52,10 @@ const useFetchCurrentBmiData = () => {
     };
 
     fetchData();
-  }, [user]);
+  }, [user, isRefresh]);
 
-  return bmiResult;
+  // Return an object with bmiResult and refreshBmi function
+  return {bmiResultData, refreshBmi};
 };
 
 export default useFetchCurrentBmiData;

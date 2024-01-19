@@ -17,7 +17,7 @@ const BMIResult = ({route}) => {
 
   const navigate = useNavigation();
 
-  const bmiResultData = useFetchCurrentBmiData();
+  const {bmiResultData} = useFetchCurrentBmiData();
 
   console.log('id', bmiResultData?.id);
 

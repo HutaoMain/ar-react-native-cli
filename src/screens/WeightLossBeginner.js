@@ -1,6 +1,10 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {FIRESTORE_DB} from '../FirebaseConfig';
+import {addDoc, collection} from 'firebase/firestore';
+import useAuthStore from '../zustand/AuthStore';
+import moment from 'moment';
 
 const data = [
   {
@@ -28,7 +32,20 @@ const data = [
 const WeightLossBeginner = () => {
   const navigation = useNavigation();
 
-  const navigateToScreen = screenName => {
+  const user = useAuthStore(state => state.user);
+
+  const handleSaveWorkoutProgress = async nameOfWork => {
+    const usersCollectionRef = collection(FIRESTORE_DB, 'workProgress');
+
+    await addDoc(usersCollectionRef, {
+      email: user,
+      date: moment(new Date()).format('YYYY-MM-DD hh:mm A'),
+      nameOfWork: nameOfWork,
+    });
+  };
+
+  const navigateToScreen = (screenName, title) => {
+    handleSaveWorkoutProgress(title);
     navigation.navigate(screenName);
   };
 
@@ -38,16 +55,16 @@ const WeightLossBeginner = () => {
       onPress={() => {
         switch (item.title) {
           case 'Butt Kick':
-            navigateToScreen('ARScreenButtKicks');
+            navigateToScreen('ARScreenButtKicks', item.title);
             break;
           case 'High Knees':
-            navigateToScreen('ARScreenHighKnees');
+            navigateToScreen('ARScreenHighKnees', item.title);
             break;
           case 'Jog in Place':
-            navigateToScreen('ARScreenJogInPlace');
+            navigateToScreen('ARScreenJogInPlace', item.title);
             break;
           case 'Jumping Jacks':
-            navigateToScreen('ARScreenJumpingJack');
+            navigateToScreen('ARScreenJumpingJack', item.title);
             break;
 
           default:
